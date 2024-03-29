@@ -19,7 +19,7 @@ import {
 import { Response } from 'express';
 import { catchError, map, Observable } from 'rxjs';
 import { AuthMicroserviceService } from './auth-microservice.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { AllGlobalExceptionsFilter } from 'src/filters/rcp-filter.filter';
 // import { JwtAuthGuard } from '../guard/jwt.guard';
 // import { RoleGuard } from '../guard/role.guard';
@@ -38,7 +38,7 @@ export class AuthMicroserviceController {
     return this.authMicroserviceService.connection();
   }
 
-  @Post('user/create')
+  @Post('create-user')
   createNewUser(
     @Body() createUserDto: CreateUserDto,
     @Res() res: Response,
@@ -46,14 +46,58 @@ export class AuthMicroserviceController {
     return this.authMicroserviceService
       .createNewUser(createUserDto)
       .pipe(
-        catchError((e) => {
-          throw new HttpException(e.message, e.status);
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
         }),
       )
       .pipe(
         map((resp) => {
           return res.status(201).json({
-            message: 'New User created!',
+            message: 'Successfully created new user!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Post('login')
+  login(
+    @Body() loginDto: LoginDto,
+    @Res() res: Response,
+  ): Observable<Response> {
+    return this.authMicroserviceService
+      .login(loginDto)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully logged in user!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Post('activate-account')
+  accountActivation(
+    @Body() loginDto: LoginDto,
+    @Res() res: Response,
+  ): Observable<Response> {
+    return this.authMicroserviceService
+      .login(loginDto)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully activated account!',
             data: resp,
           });
         }),

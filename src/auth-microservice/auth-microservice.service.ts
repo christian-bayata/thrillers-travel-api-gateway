@@ -2,7 +2,7 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { map, Observable } from 'rxjs';
 import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthMicroserviceService {
@@ -23,6 +23,20 @@ export class AuthMicroserviceService {
       return this.clientAuthService.send<any>(
         { cmd: PublisherPattern.CREATE_NEW_USER },
         createUserDto,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  login(loginDto: LoginDto): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.LOGIN },
+        loginDto,
       );
     } catch (error) {
       throw new HttpException(

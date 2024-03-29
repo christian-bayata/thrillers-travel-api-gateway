@@ -4,8 +4,6 @@ import { AuthMicroserviceController } from './auth-microservice.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { existsSync, mkdirSync } from 'fs';
-import * as path from 'path';
 
 @Module({
   controllers: [AuthMicroserviceController],
@@ -26,7 +24,7 @@ import * as path from 'path';
         useFactory: async (config: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
-            urls: config.get('RABBITMQ'),
+            urls: config.get('RABBITMQ_URL'),
             queue: 'auth_microservice',
             queueOptions: {
               durable: true,
@@ -37,11 +35,4 @@ import * as path from 'path';
     ]),
   ],
 })
-export class AppModule implements OnModuleInit {
-  async onModuleInit(): Promise<void> {
-    if (!existsSync(path.join(__dirname, '..', 'logs'))) {
-      mkdirSync(path.join(__dirname, '..', 'logs'));
-    }
-    return;
-  }
-}
+export class AuthMicroserviceModule {}
