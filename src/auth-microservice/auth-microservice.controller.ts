@@ -82,13 +82,13 @@ export class AuthMicroserviceController {
       );
   }
 
-  @Post('activate-account')
+  @Post('activate-account/:id')
   accountActivation(
-    @Body() loginDto: LoginDto,
     @Res() res: Response,
+    @Param('id') id: string,
   ): Observable<Response> {
     return this.authMicroserviceService
-      .login(loginDto)
+      .accountActivation(id)
       .pipe(
         catchError((error) => {
           throw new HttpException(error.message, error.status);

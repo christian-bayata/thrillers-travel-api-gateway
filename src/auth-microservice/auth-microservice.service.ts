@@ -45,4 +45,18 @@ export class AuthMicroserviceService {
       );
     }
   }
+
+  accountActivation(id: string): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.ACCOUNT_ACTIVATION },
+        id,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
 }
