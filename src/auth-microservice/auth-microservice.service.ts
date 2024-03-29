@@ -1,7 +1,8 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { map, Observable } from 'rxjs';
-import { PublisherPattern } from 'src/common/interfaces/publisher-patterrt.enum';
+import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthMicroserviceService {

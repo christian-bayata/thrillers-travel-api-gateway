@@ -19,14 +19,15 @@ import {
 import { Response } from 'express';
 import { catchError, map, Observable } from 'rxjs';
 import { AuthMicroserviceService } from './auth-microservice.service';
-import { LoginDto } from './dto/sign-in.dto';
-import { JwtAuthGuard } from '../guard/jwt.guard';
-import { RoleGuard } from '../guard/roles.guard';
-import { Roles } from '../guard/decorator/roles.decorator';
-import { Role } from '../common/interfaces/role.interfaces';
+import { CreateUserDto } from './dto/create-user.dto';
+import { AllGlobalExceptionsFilter } from 'src/filters/rcp-filter.filter';
+// import { JwtAuthGuard } from '../guard/jwt.guard';
+// import { RoleGuard } from '../guard/role.guard';
+// import { Roles } from '../guard/decorator/roles.decorator';
+// import { Role } from '../common/interfaces/role.interfaces';
 
 @Controller('auth-microservice')
-// @UseFilters(AllGlobalExceptionsFilter)
+@UseFilters(AllGlobalExceptionsFilter)
 export class AuthMicroserviceController {
   constructor(
     private readonly authMicroserviceService: AuthMicroserviceService,
@@ -39,7 +40,7 @@ export class AuthMicroserviceController {
 
   @Post('user/create')
   createNewUser(
-    @Body() createUserDto: /* CreateUserDto, */ ''
+    @Body() createUserDto: CreateUserDto,
     @Res() res: Response,
   ): Observable<Response> {
     return this.authMicroserviceService
