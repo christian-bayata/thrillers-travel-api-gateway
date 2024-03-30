@@ -27,6 +27,7 @@ import { CreatePlaneDto, UpdatePlaneDto } from './dto/create-plane.dto';
 import { RoleGuard } from 'src/guard/roles.guard';
 import { Roles } from 'src/guard/decorator/roles.decorator';
 import { Role } from 'src/common/interfaces/role.interface';
+import { RetrievePlanesDto } from './dto/retrieve-planes.dto';
 
 @Controller('flight-booking-microservice')
 @UseFilters(AllGlobalExceptionsFilter)
@@ -82,6 +83,67 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(200).json({
             message: 'Successfully updated plane info!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Get('retrieve/:planeId')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  retrieveSinglePlane(
+    @Res() res: Response,
+    @Req() req: any,
+    @Param('planeId') planeId: string,
+  ): Observable<Response> {
+    return this.flightBookingMicroserviceService
+      .retrieveSinglePlane(planeId)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully retrieved plane info!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Get('retrieve-all-planes')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  retrieveAllPlanes(
+    @Res() res: Response,
+    @Req() req: any,
+    @Query('batch') batch: string,
+    @Query('limit') limit: string,
+    @Query('search') search: string,
+  ): Observable<Response> {
+    function payload(): RetrievePlanesDto {
+      return {
+        batch: +batch,
+        limit: +limit,
+        search,
+        userId: req.user.user_id,
+      };
+    }
+
+    return this.flightBookingMicroserviceService
+      .retrieveAllPlanes(payload())
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully retrieved all planes',
             data: resp,
           });
         }),
