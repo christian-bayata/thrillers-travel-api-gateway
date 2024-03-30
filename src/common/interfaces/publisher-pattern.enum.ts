@@ -11,4 +11,5 @@ export enum PublisherPattern {
 
   /******************************** FLIGHT-BOOKING *************************************/
   CREATE_PLANE = 'create_plane',
+  UPDATE_PLANE = 'update_plane',
 }

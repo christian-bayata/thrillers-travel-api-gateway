@@ -2,7 +2,7 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { map, Observable } from 'rxjs';
 import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
-import { CreatePlaneDto } from './dto/create-plane.dto';
+import { CreatePlaneDto, UpdatePlaneDto } from './dto/create-plane.dto';
 
 @Injectable()
 export class FlightBookingMicroserviceService {
@@ -27,11 +27,11 @@ export class FlightBookingMicroserviceService {
     }
   }
 
-  updatePlane(createPlaneDto: CreatePlaneDto): Observable<any> {
+  updatePlane(updatePlaneDto: UpdatePlaneDto): Observable<any> {
     try {
       return this.clientAuthService.send<any>(
-        { cmd: PublisherPattern.CREATE_PLANE },
-        createPlaneDto,
+        { cmd: PublisherPattern.UPDATE_PLANE },
+        updatePlaneDto,
       );
     } catch (error) {
       throw new HttpException(

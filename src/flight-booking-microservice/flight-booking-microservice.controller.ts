@@ -61,7 +61,7 @@ export class FlightBookingMicroserviceController {
       );
   }
 
-  @Post('update/:planeId')
+  @Patch('update/:planeId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   updatePlane(
@@ -72,7 +72,7 @@ export class FlightBookingMicroserviceController {
   ): Observable<Response> {
     updatePlaneDto.planeId = planeId;
     return this.flightBookingMicroserviceService
-      .createPlane(updatePlaneDto)
+      .updatePlane(updatePlaneDto)
       .pipe(
         catchError((error) => {
           throw new HttpException(error.message, error.status);
