@@ -24,10 +24,6 @@ import { AllGlobalExceptionsFilter } from 'src/filters/rcp-filter.filter';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from 'src/guard/jwt.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import { JwtAuthGuard } from '../guard/jwt.guard';
-// import { RoleGuard } from '../guard/role.guard';
-// import { Roles } from '../guard/decorator/roles.decorator';
-// import { Role } from '../common/interfaces/role.interfaces';
 
 @Controller('auth-microservice')
 @UseFilters(AllGlobalExceptionsFilter)

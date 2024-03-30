@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthMicroserviceModule } from './auth-microservice/auth-microservice.module';
 import { existsSync, mkdirSync } from 'fs';
 import * as path from 'path';
+import { FlightBookingMicroserviceModule } from './flight-booking-microservice/flight-booking-microservice.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import * as path from 'path';
       expandVariables: true,
     }),
     AuthMicroserviceModule,
+    FlightBookingMicroserviceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

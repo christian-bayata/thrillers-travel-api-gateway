@@ -1,4 +1,5 @@
 export enum PublisherPattern {
+  /******************************** USERS *************************************/
   CONNECTION_CHECK = 'conection_check',
   CREATE_NEW_USER = 'create_new_user',
   LOGIN = 'login',
@@ -7,4 +8,7 @@ export enum PublisherPattern {
   RESET_PASSWORD = 'reset_password',
   USER_PROFILE = 'user_profile',
   UPDATE_USER = 'update_user',
+
+  /******************************** FLIGHT-BOOKING *************************************/
+  CREATE_PLANE = 'create_plane',
 }
