@@ -8,6 +8,7 @@ import {
   RetrievePlanesDto,
 } from './dto/retrieve-planes.dto';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { BookingActionDto } from './dto/booking-action.dto';
 
 @Injectable()
 export class FlightBookingMicroserviceService {
@@ -123,6 +124,20 @@ export class FlightBookingMicroserviceService {
       return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.RETRIEVE_BOOKING },
         bookingId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  bookingAction(bookingActionDto: BookingActionDto): Observable<any> {
+    try {
+      return this.clientFlightBookingService.send<any>(
+        { cmd: PublisherPattern.BOOKING_ACTION },
+        bookingActionDto,
       );
     } catch (error) {
       throw new HttpException(

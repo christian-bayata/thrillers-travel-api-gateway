@@ -33,6 +33,7 @@ import {
   RetrievePlanesDto,
 } from './dto/retrieve-planes.dto';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { BookingActionDto } from './dto/booking-action.dto';
 
 @Controller('flight-booking-microservice')
 @UseFilters(AllGlobalExceptionsFilter)
@@ -267,6 +268,40 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(200).json({
             message: 'Successfully retrieved flight booking info!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Post('booking-action')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  bookingAction(
+    @Res() res: Response,
+    @Req() req: any,
+    @Query('bookingId') bookingId: string,
+    @Query('flag') flag: string,
+    @Body('rejectionReason') rejectionReason?: string,
+  ): Observable<Response> {
+    function payload(): BookingActionDto {
+      return {
+        bookingId,
+        flag,
+        rejectionReason,
+      };
+    }
+    return this.flightBookingMicroserviceService
+      .bookingAction(payload())
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully performed booking action!',
             data: resp,
           });
         }),

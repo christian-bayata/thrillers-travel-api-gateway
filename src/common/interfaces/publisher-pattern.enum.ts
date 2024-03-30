@@ -18,4 +18,5 @@ export enum PublisherPattern {
   CREATE_BOOKING = 'create_booking',
   RETRIEVE_ALL_BOOKINGS = 'retrieve_all_bookings',
   RETRIEVE_BOOKING = 'retrieve_booking',
+  BOOKING_ACTION = 'booking_action',
 }
