@@ -69,4 +69,18 @@ export class FlightBookingMicroserviceService {
       );
     }
   }
+
+  deleteSinglePlane(planeId: string): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.DELETE_PLANE },
+        planeId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
 }

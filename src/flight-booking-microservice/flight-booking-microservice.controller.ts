@@ -15,6 +15,7 @@ import {
   UploadedFiles,
   Patch,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { catchError, map, Observable } from 'rxjs';
@@ -144,6 +145,31 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(200).json({
             message: 'Successfully retrieved all planes',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Delete('delete/:planeId')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  deleteSinglePlane(
+    @Res() res: Response,
+    @Req() req: any,
+    @Param('planeId') planeId: string,
+  ): Observable<Response> {
+    return this.flightBookingMicroserviceService
+      .deleteSinglePlane(planeId)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully deleted plane info!',
             data: resp,
           });
         }),
