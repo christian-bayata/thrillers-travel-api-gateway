@@ -3,6 +3,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { map, Observable } from 'rxjs';
 import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthMicroserviceService {
@@ -51,6 +53,62 @@ export class AuthMicroserviceService {
       return this.clientAuthService.send<any>(
         { cmd: PublisherPattern.ACCOUNT_ACTIVATION },
         id,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.FORGOT_PASSWORD },
+        email,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  resetPassword(resetPasswordDto: ResetPasswordDto): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.RESET_PASSWORD },
+        resetPasswordDto,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  userProfile(userId: string): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.USER_PROFILE },
+        userId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  updateUser(updateUserDto: UpdateUserDto): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.UPDATE_USER },
+        updateUserDto,
       );
     } catch (error) {
       throw new HttpException(
