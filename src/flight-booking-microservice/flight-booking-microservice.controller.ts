@@ -37,7 +37,7 @@ export class FlightBookingMicroserviceController {
     private readonly flightBookingMicroserviceService: FlightBookingMicroserviceService,
   ) {}
 
-  @Post('create')
+  @Post('create-plane')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   createPlane(
@@ -63,7 +63,7 @@ export class FlightBookingMicroserviceController {
       );
   }
 
-  @Patch('update/:planeId')
+  @Patch('update-plane/:planeId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   updatePlane(
@@ -90,7 +90,7 @@ export class FlightBookingMicroserviceController {
       );
   }
 
-  @Get('retrieve/:planeId')
+  @Get('retrieve-plane/:planeId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   retrieveSinglePlane(
@@ -151,7 +151,7 @@ export class FlightBookingMicroserviceController {
       );
   }
 
-  @Delete('delete/:planeId')
+  @Delete('delete-plane/:planeId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   deleteSinglePlane(
