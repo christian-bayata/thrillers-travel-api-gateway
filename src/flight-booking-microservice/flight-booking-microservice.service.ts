@@ -4,19 +4,20 @@ import { map, Observable } from 'rxjs';
 import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
 import { CreatePlaneDto, UpdatePlaneDto } from './dto/create-plane.dto';
 import { RetrievePlanesDto } from './dto/retrieve-planes.dto';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Injectable()
 export class FlightBookingMicroserviceService {
   constructor(
     @Inject('FLIGHT_BOOKING_SERVICE')
-    private readonly clientAuthService: ClientProxy,
+    private readonly clientFlightBookingService: ClientProxy,
   ) {}
 
   private readonly ISE: string = 'Internal server error';
 
   createPlane(createPlaneDto: CreatePlaneDto): Observable<any> {
     try {
-      return this.clientAuthService.send<any>(
+      return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.CREATE_PLANE },
         createPlaneDto,
       );
@@ -30,7 +31,7 @@ export class FlightBookingMicroserviceService {
 
   updatePlane(updatePlaneDto: UpdatePlaneDto): Observable<any> {
     try {
-      return this.clientAuthService.send<any>(
+      return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.UPDATE_PLANE },
         updatePlaneDto,
       );
@@ -44,7 +45,7 @@ export class FlightBookingMicroserviceService {
 
   retrieveSinglePlane(planeId: string): Observable<any> {
     try {
-      return this.clientAuthService.send<any>(
+      return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.RETRIEVE_PLANE },
         planeId,
       );
@@ -58,7 +59,7 @@ export class FlightBookingMicroserviceService {
 
   retrieveAllPlanes(retrievePlanesDto: RetrievePlanesDto): Observable<any> {
     try {
-      return this.clientAuthService.send<any>(
+      return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.RETRIEVE_ALL_PLANES },
         retrievePlanesDto,
       );
@@ -72,9 +73,23 @@ export class FlightBookingMicroserviceService {
 
   deleteSinglePlane(planeId: string): Observable<any> {
     try {
-      return this.clientAuthService.send<any>(
+      return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.DELETE_PLANE },
         planeId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  createBooking(createBookingDto: CreateBookingDto): Observable<any> {
+    try {
+      return this.clientFlightBookingService.send<any>(
+        { cmd: PublisherPattern.CREATE_BOOKING },
+        createBookingDto,
       );
     } catch (error) {
       throw new HttpException(

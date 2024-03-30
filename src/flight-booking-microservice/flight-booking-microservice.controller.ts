@@ -29,6 +29,7 @@ import { RoleGuard } from 'src/guard/roles.guard';
 import { Roles } from 'src/guard/decorator/roles.decorator';
 import { Role } from 'src/common/interfaces/role.interface';
 import { RetrievePlanesDto } from './dto/retrieve-planes.dto';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Controller('flight-booking-microservice')
 @UseFilters(AllGlobalExceptionsFilter)
@@ -170,6 +171,32 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(200).json({
             message: 'Successfully deleted plane info!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Post('create-booking')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.RWX_USER)
+  createBooking(
+    @Body() createBookingDto: CreateBookingDto,
+    @Res() res: Response,
+    @Req() req: any,
+  ): Observable<Response> {
+    createBookingDto.userId = req.user.user_id;
+    return this.flightBookingMicroserviceService
+      .createBooking(createBookingDto)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(201).json({
+            message: 'Successfully created flight booking!',
             data: resp,
           });
         }),
