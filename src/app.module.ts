@@ -6,6 +6,7 @@ import { AuthMicroserviceModule } from './auth-microservice/auth-microservice.mo
 import { existsSync, mkdirSync } from 'fs';
 import * as path from 'path';
 import { FlightBookingMicroserviceModule } from './flight-booking-microservice/flight-booking-microservice.module';
+import { HotelReservationMicroserviceModule } from './hotel-reservation-microservice/hotel-reservation-microservice.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { FlightBookingMicroserviceModule } from './flight-booking-microservice/f
     }),
     AuthMicroserviceModule,
     FlightBookingMicroserviceModule,
+    HotelReservationMicroserviceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
