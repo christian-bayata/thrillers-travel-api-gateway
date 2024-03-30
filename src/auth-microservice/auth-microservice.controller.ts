@@ -15,6 +15,7 @@ import {
   UploadedFiles,
   Patch,
   Query,
+  Redirect,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { catchError, map, Observable } from 'rxjs';
@@ -24,12 +25,15 @@ import { AllGlobalExceptionsFilter } from 'src/filters/rcp-filter.filter';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from 'src/guard/jwt.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService } from '@nestjs/config';
+import { GoogleOAuthGuard } from 'src/guard/google-auth.guard';
 
 @Controller('auth-microservice')
 @UseFilters(AllGlobalExceptionsFilter)
 export class AuthMicroserviceController {
   constructor(
     private readonly authMicroserviceService: AuthMicroserviceService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get('/connect')
@@ -203,5 +207,28 @@ export class AuthMicroserviceController {
           });
         }),
       );
+  }
+
+  @Get('google')
+  @UseGuards(GoogleOAuthGuard)
+  @Redirect()
+  googleAuth(@Res() res: any): any {
+    const scope = encodeURIComponent('email profile');
+    const state = encodeURIComponent('12345');
+    const googleAuthUrl = `${this.configService.get('GOOGLE_OAUTH_BASE_URL')}?response_type=code&client_id=${this.configService.get('GOOGLE_OAUTH_CLIENT_ID')}&redirect_uri=${this.configService.get('GOOGLE_OAUTH_CALLBACK_URL')}&scope=${scope}&state=${state}`;
+    return { url: googleAuthUrl };
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleOAuthGuard)
+  googleAuthCallback(@Req() req: any, @Res() res: any) {
+    if (!req.user) {
+      return 'No user from google';
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user,
+    };
   }
 }

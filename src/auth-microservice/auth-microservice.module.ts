@@ -4,12 +4,12 @@ import { AuthMicroserviceController } from './auth-microservice.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { GoogleStrategy } from 'src/guard/google-auth.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  controllers: [AuthMicroserviceController],
-  providers: [AuthMicroserviceService, ConfigService],
-  exports: [AuthMicroserviceService],
   imports: [
+    PassportModule.register({ defaultStrategy: 'google' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -34,5 +34,8 @@ import { JwtModule } from '@nestjs/jwt';
       },
     ]),
   ],
+  controllers: [AuthMicroserviceController],
+  providers: [AuthMicroserviceService, ConfigService, GoogleStrategy],
+  exports: [AuthMicroserviceService],
 })
 export class AuthMicroserviceModule {}
