@@ -219,13 +219,12 @@ export class AuthMicroserviceController {
     return { url: googleAuthUrl };
   }
 
-  @Get('google/callback')
+  @Get('google-callback')
   @UseGuards(GoogleOAuthGuard)
   googleAuthCallback(@Req() req: any, @Res() res: any) {
     if (!req.user) {
       return 'No user from google';
     }
-
     return {
       message: 'User information from google',
       user: req.user,
