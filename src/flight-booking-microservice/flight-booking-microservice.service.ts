@@ -3,7 +3,10 @@ import { ClientProxy } from '@nestjs/microservices';
 import { map, Observable } from 'rxjs';
 import { PublisherPattern } from 'src/common/interfaces/publisher-pattern.enum';
 import { CreatePlaneDto, UpdatePlaneDto } from './dto/create-plane.dto';
-import { RetrievePlanesDto } from './dto/retrieve-planes.dto';
+import {
+  RetrieveBookingsDto,
+  RetrievePlanesDto,
+} from './dto/retrieve-planes.dto';
 import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Injectable()
@@ -90,6 +93,22 @@ export class FlightBookingMicroserviceService {
       return this.clientFlightBookingService.send<any>(
         { cmd: PublisherPattern.CREATE_BOOKING },
         createBookingDto,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
+  retrieveAllBookings(
+    retrieveBookingsDto: RetrieveBookingsDto,
+  ): Observable<any> {
+    try {
+      return this.clientFlightBookingService.send<any>(
+        { cmd: PublisherPattern.RETRIEVE_ALL_BOOKINGS },
+        retrieveBookingsDto,
       );
     } catch (error) {
       throw new HttpException(

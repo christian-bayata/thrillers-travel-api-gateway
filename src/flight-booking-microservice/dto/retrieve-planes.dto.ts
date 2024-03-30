@@ -4,3 +4,9 @@ export class RetrievePlanesDto {
   search?: string;
   userId: string;
 }
+
+export class RetrieveBookingsDto extends RetrievePlanesDto {
+  flag: string;
+  filterStartDate?: string;
+  filterEndDate?: string;
+}

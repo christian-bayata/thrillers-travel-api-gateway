@@ -28,7 +28,10 @@ import { CreatePlaneDto, UpdatePlaneDto } from './dto/create-plane.dto';
 import { RoleGuard } from 'src/guard/roles.guard';
 import { Roles } from 'src/guard/decorator/roles.decorator';
 import { Role } from 'src/common/interfaces/role.interface';
-import { RetrievePlanesDto } from './dto/retrieve-planes.dto';
+import {
+  RetrieveBookingsDto,
+  RetrievePlanesDto,
+} from './dto/retrieve-planes.dto';
 import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Controller('flight-booking-microservice')
@@ -197,6 +200,48 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(201).json({
             message: 'Successfully created flight booking!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Get('retrieve-all-bookings')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.RWX_USER)
+  retrieveAllBookings(
+    @Res() res: Response,
+    @Req() req: any,
+    @Query('batch') batch: string,
+    @Query('limit') limit: string,
+    @Query('search') search: string,
+    @Query('flag') flag: string,
+    @Query('filterStartDate') filterStartDate: string,
+    @Query('filterEndDate') filterEndDate: string,
+  ): Observable<Response> {
+    function payload(): RetrieveBookingsDto {
+      return {
+        batch: +batch,
+        limit: +limit,
+        search,
+        flag,
+        filterStartDate,
+        filterEndDate,
+        userId: req.user.user_id,
+      };
+    }
+
+    return this.flightBookingMicroserviceService
+      .retrieveAllBookings(payload())
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully retrieved all user flight bookings',
             data: resp,
           });
         }),
