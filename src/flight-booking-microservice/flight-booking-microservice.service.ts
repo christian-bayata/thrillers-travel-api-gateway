@@ -117,4 +117,18 @@ export class FlightBookingMicroserviceService {
       );
     }
   }
+
+  retrieveSingleBooking(bookingId: string): Observable<any> {
+    try {
+      return this.clientFlightBookingService.send<any>(
+        { cmd: PublisherPattern.RETRIEVE_BOOKING },
+        bookingId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
 }

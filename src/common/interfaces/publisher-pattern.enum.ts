@@ -17,4 +17,5 @@ export enum PublisherPattern {
   DELETE_PLANE = 'delete_plane',
   CREATE_BOOKING = 'create_booking',
   RETRIEVE_ALL_BOOKINGS = 'retrieve_all_bookings',
+  RETRIEVE_BOOKING = 'retrieve_booking',
 }

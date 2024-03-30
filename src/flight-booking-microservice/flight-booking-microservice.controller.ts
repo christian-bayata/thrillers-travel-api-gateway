@@ -208,7 +208,7 @@ export class FlightBookingMicroserviceController {
 
   @Get('retrieve-all-bookings')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.ADMIN, Role.RWX_USER)
+  @Roles(Role.RWX_USER)
   retrieveAllBookings(
     @Res() res: Response,
     @Req() req: any,
@@ -242,6 +242,31 @@ export class FlightBookingMicroserviceController {
         map((resp) => {
           return res.status(200).json({
             message: 'Successfully retrieved all user flight bookings',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Get('retrieve-booking/:bookingId')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.RWX_USER)
+  retrieveSingleBooking(
+    @Res() res: Response,
+    @Req() req: any,
+    @Param('bookingId') bookingId: string,
+  ): Observable<Response> {
+    return this.flightBookingMicroserviceService
+      .retrieveSingleBooking(bookingId)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully retrieved flight booking info!',
             data: resp,
           });
         }),
