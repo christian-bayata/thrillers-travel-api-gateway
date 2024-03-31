@@ -41,7 +41,7 @@ export class AuthMicroserviceController {
     return this.authMicroserviceService.connection();
   }
 
-  @Post('create-user')
+  @Post('sign-in')
   createNewUser(
     @Body() createUserDto: CreateUserDto,
     @Res() res: Response,
@@ -57,6 +57,28 @@ export class AuthMicroserviceController {
         map((resp) => {
           return res.status(201).json({
             message: 'Successfully created new user!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Post('admin-sign-in')
+  createNewAdminUser(
+    @Body() createUserDto: CreateUserDto,
+    @Res() res: Response,
+  ): Observable<Response> {
+    return this.authMicroserviceService
+      .createNewAdminUser(createUserDto)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(201).json({
+            message: 'Successfully created new admin user!',
             data: resp,
           });
         }),

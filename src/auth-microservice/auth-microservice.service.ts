@@ -34,6 +34,20 @@ export class AuthMicroserviceService {
     }
   }
 
+  createNewAdminUser(createUserDto: CreateUserDto): Observable<any> {
+    try {
+      return this.clientAuthService.send<any>(
+        { cmd: PublisherPattern.CREATE_NEW_ADMIN_USER },
+        createUserDto,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error?.message ? error.message : this.ISE,
+        error?.status ? error.status : 500,
+      );
+    }
+  }
+
   login(loginDto: LoginDto): Observable<any> {
     try {
       return this.clientAuthService.send<any>(
