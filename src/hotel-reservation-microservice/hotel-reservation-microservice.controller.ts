@@ -35,7 +35,7 @@ export class HotelReservationMicroserviceController {
 
   @Post('create-reservation')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.RWX_USER)
   createReservation(
     @Body() createReservationDto: CreateReservationDto,
     @Res() res: Response,
@@ -54,6 +54,31 @@ export class HotelReservationMicroserviceController {
         map((resp) => {
           return res.status(201).json({
             message: 'Successfully created new hotel reservation!',
+            data: resp,
+          });
+        }),
+      );
+  }
+
+  @Get('retrieve-reservation/:reservationId')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  retrieveReservation(
+    @Res() res: Response,
+    @Req() req: any,
+    @Param('reservationId') reservationId: string,
+  ): Observable<Response> {
+    return this.hotelReservationMicroserviceService
+      .retrieveReservation(reservationId)
+      .pipe(
+        catchError((error) => {
+          throw new HttpException(error.message, error.status);
+        }),
+      )
+      .pipe(
+        map((resp) => {
+          return res.status(200).json({
+            message: 'Successfully retrieved hotel reservation!',
             data: resp,
           });
         }),
